@@ -323,8 +323,6 @@ int serial_getinfo(struct udevice *dev, struct serial_device_info *info)
 	if (!info)
 		return -EINVAL;
 
-	info->baudrate = gd->baudrate;
-
 	ops = serial_get_ops(dev);
 	if (ops->getinfo)
 		return ops->getinfo(dev, info);
