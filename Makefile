@@ -1793,6 +1793,9 @@ etags:
 cscope:
 		$(FIND) $(FINDFLAGS) $(TAG_SUBDIRS) -name '*.[chS]' -print > \
 						cscope.files
+		@find $(TAG_SUBDIRS) -name '*.[chS]' -type l -print | \
+			grep -xvf - cscope.files > cscope.files.no-symlinks; \
+		mv cscope.files.no-symlinks cscope.files
 		cscope -b -q -k
 
 SYSTEM_MAP = \
