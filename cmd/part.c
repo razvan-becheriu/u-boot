@@ -26,7 +26,7 @@ enum cmd_part_info {
 	CMD_PART_INFO_START = 0,
 	CMD_PART_INFO_SIZE,
 	CMD_PART_INFO_BLOCK,
-	CMD_PART_INFO_NUMBER,
+	CMD_PART_INFO_NUMBER
 };
 
 static int do_part_uuid(int argc, char * const argv[])
@@ -124,7 +124,6 @@ static int do_part_info(int argc, char * const argv[], enum cmd_part_info param)
 	int part;
 	int err;
 	int ret;
-	int id = 0;
 
 	if (argc < 3)
 		return CMD_RET_USAGE;
@@ -136,7 +135,7 @@ static int do_part_info(int argc, char * const argv[], enum cmd_part_info param)
 		return 1;
 
 	part = simple_strtoul(argv[2], &endp, 0);
-	if (*endp == '\0' && param != CMD_PART_INFO_NUMBER) {
+	if (*endp == '\0') {
 		err = part_get_info(desc, part, &info);
 		if (err)
 			return 1;
@@ -144,21 +143,6 @@ static int do_part_info(int argc, char * const argv[], enum cmd_part_info param)
 		part = part_get_info_by_name(desc, argv[2], &info);
 		if (part == -1)
 			return 1;
-	}
-
-	if (param == CMD_PART_INFO_NUMBER) {
-		int p;
-		disk_partition_t info;
-
-		for (p = 1; p < MAX_SEARCH_PARTITIONS; p++) {
-			int r = part_get_info(desc, p, &info);
-			if (r != 0)
-				continue;
-			if (!strcmp(info.name, argv[2])) {
-				id = p;
-				break;
-			}
-		}
 	}
 
 	switch (param) {
@@ -172,7 +156,7 @@ static int do_part_info(int argc, char * const argv[], enum cmd_part_info param)
 		snprintf(buf, sizeof(buf), LBAF, info.blksz);
 		break;
 	case CMD_PART_INFO_NUMBER:
-		snprintf(buf, sizeof(buf), LBAF, id);
+		snprintf(buf, sizeof(buf), "0x%x", part);
 		break;
 	default:
 		printf("** Unknown cmd_part_info value: %d\n", param);
