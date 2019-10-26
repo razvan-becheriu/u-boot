@@ -251,5 +251,5 @@ U_BOOT_CMD(
 	"      part can be either partition number or partition name\n"
 	"part number <interface> <dev> <part> <varname>\n"
 	"    - set environment variable to the partition number using the partition name\n"
-	"      part must be partition name"
+	"      part must be specified as partition name"
 );
